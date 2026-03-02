@@ -1,9 +1,12 @@
 import numpy as np
 import pandas as pd
 import random
+from datetime import datetime
 
 def generate_housing_data(rows=1000, filename="housing.csv"):
     np.random.seed(42)
+
+    current_year = datetime.now().year
 
     locations = {
         "City": {"base_price": 6000, "lat": 19.07, "lon": 72.87},
@@ -21,7 +24,11 @@ def generate_housing_data(rows=1000, filename="housing.csv"):
         bedrooms = np.random.randint(1, 6)
         bathrooms = np.random.randint(1, 5)
         parking = np.random.randint(0, 3)
-        age = np.random.randint(0, 30)
+
+        # Generate realistic construction year
+        year_built = np.random.randint(1990, current_year + 1)
+        age = current_year - year_built  # used internally for pricing
+
         furnished = np.random.choice([0, 1])
 
         # Realistic pricing formula
@@ -30,7 +37,7 @@ def generate_housing_data(rows=1000, filename="housing.csv"):
             + bedrooms * 200000
             + bathrooms * 150000
             + parking * 100000
-            - age * 50000
+            - age * 50000   # depreciation factor
             + furnished * 300000
         )
 
@@ -46,7 +53,7 @@ def generate_housing_data(rows=1000, filename="housing.csv"):
             bedrooms,
             bathrooms,
             parking,
-            age,
+            year_built,
             furnished,
             location,
             round(latitude, 6),
@@ -59,7 +66,7 @@ def generate_housing_data(rows=1000, filename="housing.csv"):
         "bedrooms",
         "bathrooms",
         "parking",
-        "age",
+        "year_built",
         "furnished",
         "location",
         "latitude",
@@ -74,4 +81,4 @@ def generate_housing_data(rows=1000, filename="housing.csv"):
 
 
 if __name__ == "__main__":
-    generate_housing_data(rows=1000)  # Change to any number
+    generate_housing_data(rows=1000)
